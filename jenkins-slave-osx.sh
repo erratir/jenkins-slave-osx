@@ -1,21 +1,18 @@
 #!/bin/bash
 set -e
 
-VERSION=1.0.0
-
 usage() {
 cat << EOF
-VERSION: $VERSION
 USAGE:
-    $0 [--option]
+    $0 [-option]
 
 DESCRIPTION:
     This script installs and manages a Jenkins slave on OSX. The slave runs as a daemon by the current user and will automatically launch on startup.
 
-    --install    Install Jenkins slave for the current user
-    --remove     Uninstall the Jenkins slave
-    --start      Start the daemon
-    --stop       Stop the daemon
+    -install    Install Jenkins slave for the current user
+    -remove     Uninstall the Jenkins slave
+    -start      Start the daemon
+    -stop       Stop the daemon
 
     NOTE: This script is depend on Java Development Kit. So you must install JDK first.
 
@@ -84,45 +81,13 @@ stopJenkinsSlave() {
 	exit 1
 }
 
-# Jenkins settings
-JENKINS_URL_NOPROXY=''
-JENKINS_NODE_NAME=''
-JENKINS_SECRET=''
-
-# Local variables
-OSX_USER=$USER
-OSX_JENKINS_DIR=/Users/$OSX_USER/Jenkins
-OSX_JENKINS_PROCESS=com.jenkins.slave
-OSX_JENKINS_PLIST_FILE="$OSX_JENKINS_PROCESS.plist"
-
-# Install process
-if [[ $# -lt 1 ]]; then 
-	usage
-	exit 1
-fi
-
-# Check for JDK
-command -v javac -version >/dev/null 2>&1 || { error >&2 "JDK is not installed"; exit -1; }
-
-# Uninstall process
-if [ "$1" == "--start" ]; then 
-	startJenkinsSlave
-fi
-
-# Uninstall process
-if [ "$1" == "--stop" ]; then 
-	stopJenkinsSlave
-fi
-
-# Uninstall process
-if [ "$1" == "--remove" ]; then 
+removeJenkinsSlave() {
 	sudo -i rm /Library/LaunchDaemons/$OSX_JENKINS_PLIST_FILE
 	success "Jenkins slave deamon uninstalled"
 	exit 1
-fi
+}
 
-# Install process
-if [ "$1" == "--install" ]; then 
+installJenkinsSlave() {
 	# Ask user for input
 	getJenkinsNodeName
 	getJenkinsUrl
@@ -151,4 +116,36 @@ if [ "$1" == "--install" ]; then
 	success "Jenkins slave deamon installed"
 
 	startJenkinsSlave
+}
+
+# Jenkins settings
+JENKINS_URL_NOPROXY=''
+JENKINS_NODE_NAME=''
+JENKINS_SECRET=''
+
+# Local variables
+OSX_USER=$USER
+OSX_JENKINS_DIR=/Users/$OSX_USER/Jenkins
+OSX_JENKINS_PROCESS=com.jenkins.slave
+OSX_JENKINS_PLIST_FILE="$OSX_JENKINS_PROCESS.plist"
+
+# Check for JDK
+command -v javac -version >/dev/null 2>&1 || { error >&2 "JDK is not installed"; exit -1; }
+
+if [[ $# == 1 ]]; then 
+	if [ "$1" == "-start" ]; then 
+		startJenkinsSlave
+	elif [ "$1" == "-stop" ]; then 
+		stopJenkinsSlave
+	elif [ "$1" == "-remove" ]; then 
+		removeJenkinsSlave
+	elif [ "$1" == "-install" ]; then 
+		installJenkinsSlave
+	else
+		usage
+		exit 1
+	fi
+else
+	usage
+	exit 1
 fi
