@@ -19,6 +19,10 @@
         <string>-secret</string>
         <string>{{JENKINS_SECRET}}</string>
     </array>
+    <key>LowPriorityBackgroundIO</key>
+    <true/>
+    <key>ProcessType</key>
+    <string>Background</string>
     <key>KeepAlive</key>
     <true/>
     <key>StandardOutPath</key>
