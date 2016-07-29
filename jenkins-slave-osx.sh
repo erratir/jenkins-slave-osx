@@ -14,7 +14,7 @@ DESCRIPTION:
     -start      Start the daemon
     -stop       Stop the daemon
 
-    NOTE: This script is depend on Java Development Kit. So you must install JDK first.
+    NOTE: This script is dependend on Java Development Kit. So you must install JDK first.
 
 AUTHOR:
     Arthur Krupa<arthur.krupa@gmail.com>

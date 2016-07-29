@@ -4,8 +4,8 @@ Script for setting up and running a JNLP Jenkins slave on OSX.
 
 ## Instructions
 
-1. Create a new node on your Jenkins master (Manage -> Manage Nodes).
-2. Extract the repo contents on the slave machine.
+1. Create a new node on your Jenkins master (Manage -> Manage Nodes). Set root directory to `/Users/OSX_HOST_USERNAME/Jenkins`
+2. Extract the repo contents on the OSX slave host.
 3. Run `sudo chmod +x jenkins-slave-osx.sh`  to set permissions.
 5. Run `./jenkins-slave-osx.sh` to see list of available commands.
 
